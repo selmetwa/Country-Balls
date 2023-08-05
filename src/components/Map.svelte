@@ -40,6 +40,8 @@
 		const wrapper = document.querySelector('.map-container');
 		const svg = select('.map-container');
 
+    console.log({ data })
+
 		if (geoData && geoData.features && data && wrapper) {
 			const width = wrapper.clientWidth;
 			const height = wrapper.clientHeight;
