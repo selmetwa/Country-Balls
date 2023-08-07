@@ -1,6 +1,6 @@
 <!-- Map.svelte -->
 <script>
-	import { onMount, afterUpdate } from 'svelte';
+	import { onMount, afterUpdate, tick } from 'svelte';
 	import {
 		select,
 		geoPath,
@@ -10,68 +10,61 @@
 		forceCollide,
 		forceX,
 		forceY,
-		scaleLinear,
-		min,
-		max
 	} from 'd3';
-	import { countryISOMapping } from '../data/all';
+	import { countryISOMapping } from '../data/countryISOMapping';
 
 	export let data;
-	let currentTick = 0;
-	$: geoData = null;
+	export let isUpdating;
+	export let fileName;
+	export let geoData;
 
-	onMount(async () => {
-		const response = await fetch('src/data/countries.json');
-		geoData = await response.json();
+	let currentTick = 0;
+	$: isUpdating = false;
+
+	onMount(() => {
 		drawMap();
 	});
 
 	afterUpdate(() => {
-		drawMap();
+		select('.map-container').selectAll('svg').remove();
+		setTimeout(() => {
+			currentTick = 0;
+			drawMap();
+		}, 100);
 	});
 
 	function getFlag(country) {
-		return `https://hatscripts.github.io/circle-flags/flags/${countryISOMapping[
-			country.id
-		]?.toLowerCase()}.svg`;
+		const code = countryISOMapping[country.id];
+		if (!code) {
+			return null;
+		}
+
+		return `https://hatscripts.github.io/circle-flags/flags/${countryISOMapping[country.id]?.toLowerCase()}.svg`;
 	}
 
 	function drawMap() {
 		const wrapper = document.querySelector('.map-container');
 		const svg = select('.map-container');
 
-    console.log({ data })
+		console.log(fileName, { data });
 
 		if (geoData && geoData.features && data && wrapper) {
 			const width = wrapper.clientWidth;
 			const height = wrapper.clientHeight;
 			const projection = geoMercator().fitSize([width, height], geoData);
 			const path = geoPath().projection(projection);
-			const rawValues = data.map((obj) => obj.rawValue) || [];
-			const maxValue = Number(max(rawValues));
-			const minValue = Number(min(rawValues));
-
-			const circleSizeScale = scaleLinear().domain([minValue, maxValue]).rangeRound([1, 250]);
 
 			function getWidth(country) {
 				const targetCountry = data.find((obj) => obj.country === country.id);
 				return targetCountry?.width || 5;
 			}
 
-			function getFakeWidth(country) {
-				const targetCountry = data.find((obj) => obj.country === country.id);
-				return targetCountry?.width || 5;
-			}
-			// function getFakeW(country) {
-			// 	const targetCountry = data.find((obj) => obj.country === country.id);
-			//   return targetCountry?.width || 5
-			// }
 			const simulation = forceSimulation(geoData.features)
-				.force('x', forceX((country) => projection(geoCentroid(country))[0]).strength(0.1))
-				.force('y', forceY((country) => projection(geoCentroid(country))[1]).strength(0.1))
+				.force('x', forceX((country) => projection(geoCentroid(country))[0]).strength(0.25))
+				.force('y', forceY((country) => projection(geoCentroid(country))[1]).strength(0.25))
 				.force(
 					'collide',
-					forceCollide().radius((country) => getWidth(country) / 2 + 2)
+					forceCollide().radius((country) => getWidth(country) / 2 + 5)
 				);
 
 			const countryGroups = svg
@@ -103,13 +96,13 @@
 					.data(geoData.features)
 					.join('image')
 					.attr('href', (country) => getFlag(country))
-					.attr('r', (country) => getWidth(country))
+					.attr('width', (country) => getWidth(country))
 					.attr('x', (country) => country.x - getWidth(country) / 2)
 					.attr('y', (country) => country.y - getWidth(country) / 2);
 
 				currentTick++;
 
-				if (currentTick >= 150) {
+				if (currentTick >= 250) {
 					simulation.stop();
 				}
 			});

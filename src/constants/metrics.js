@@ -1,15 +1,15 @@
 export const metrics = [
   {
+    name: 'GDP',
+    value: 'gdp'
+  },
+  {
     name: 'GDP Per Capita',
     value: 'gdp_per_capita'
   },
   {
     name: 'GDP Growth',
     value: 'gdp_growth'
-  },
-  {
-    name: 'GDP',
-    value: 'gdp'
   },
   {
     name: 'GDP Purchasing Power Parity',
