@@ -3,7 +3,7 @@
 
 	import { rangeMap } from '../constants/rangeMap';
 	import Map from '../components/Map.svelte';
-  import UpdateForm from '../components/UpdateForm.svelte';
+	import UpdateForm from '../components/UpdateForm.svelte';
 
 	export let data;
 
@@ -42,30 +42,24 @@
 			body: JSON.stringify({ year: year, metric: metric })
 		});
 
-    const data = await res.json();
-    mapData = data.mapData;
+		const data = await res.json();
+		mapData = data.mapData;
 	}
 </script>
 
 <section>
-
+	<div class="wrapper">
+		<UpdateForm {updateYear} {updateMetric} {years} {handleSubmit} />
+		<Map data={mapData} {year} {isUpdating} {metric} {geoData} />
+	</div>
+	{year}
+  {metric}
 </section>
 
-<div class="wrapper">
-  <UpdateForm
-  {updateYear}
-  {updateMetric}
-  {years}
-  {handleSubmit}
-/>
-  <Map data={mapData} {year} {isUpdating} {metric} {geoData} />
-</div>
-
 <style>
-
-  section {
-    position: relative;
-  }
+	section {
+		position: relative;
+	}
 
 	.wrapper {
 		display: flex;

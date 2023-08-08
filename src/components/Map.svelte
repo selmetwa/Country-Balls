@@ -64,7 +64,7 @@
 				.force('y', forceY((country) => projection(geoCentroid(country))[1]).strength(0.25))
 				.force(
 					'collide',
-					forceCollide().radius((country) => getWidth(country) / 2 + 5)
+					forceCollide().radius((country) => getWidth(country) / 2 + 2)
 				);
 
 			const countryGroups = svg
@@ -73,7 +73,7 @@
 				.join('path')
 				.attr('d', path);
 
-			countryGroups.attr('fill', 'lightblue').attr('stroke', 'white').attr('stroke-width', 1);
+			countryGroups.attr('fill', '#F4F5F6').attr('stroke', '#E9EBED').attr('stroke-width', 1);
 
 			svg
 				.selectAll('image')
@@ -102,7 +102,7 @@
 
 				currentTick++;
 
-				if (currentTick >= 250) {
+				if (currentTick >= 50) {
 					simulation.stop();
 				}
 			});
