@@ -5,9 +5,13 @@
   export let updateMetric
   export let years
   export let handleSubmit
+  export let handleTimelapse
+  export let isTimelapsing
+  export let timelapseIndex
+  export let pauseTimelapse
 </script>
 
-<div>
+<form on:submit={handleSubmit}>
   <label>
     <select on:change={updateYear}>
       {#each years as y}
@@ -22,12 +26,21 @@
       {/each}
     </select>
   </label>
-  <button on:click={handleSubmit}>Update Chart</button>
-</div>
-
+  <h1>{years[timelapseIndex]}</h1>
+  {#if isTimelapsing === false}
+    <button type="submit">Update Chart</button>
+    <button on:click={handleTimelapse} type="button">Trigger Timelapse</button>
+  {:else}
+    <button type="button" on:click={pauseTimelapse}>Stop Timelapse</button>
+    <div>
+      <h1>{years[timelapseIndex]}</h1>
+      <meter min={years[0]} max={years[years.length - 1]} value={years[timelapseIndex]}></meter>
+    </div>
+  {/if}
+</form>
 
 <style>
-  div {
+  form {
     display: flex;
     flex-direction: column;
     width: 300px;
