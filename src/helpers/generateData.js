@@ -7,7 +7,7 @@ export const generateData = (year, metric) => {
   const output = [];
   const exclude = ["TEA", "TEC", "PST", "PRE", "OSS", "OED", "MEA", "LTE", "LMY", "LMC", "LDC", "LCN", "LAC", "INX", "IDB", "IDA", "IBT", "IBD", "FCS", "EMU", "ECS", "ECA", "EAS", "CSS", ""]
 
-  const csvData = fs.readFileSync(`src/data/${metric}.csv`, 'utf8')
+  const csvData = fs.readFileSync(`src/public/data/${metric}.csv`, 'utf8')
   const res = d3.csvParse(csvData)
 
   for (const obj of res) {

@@ -11,7 +11,7 @@
 		forceX,
 		forceY,
 	} from 'd3';
-	import { countryISOMapping } from '../data/countryISOMapping';
+	import { countryISOMapping } from '../constants/countryISOMapping';
   import { metrics } from '../constants/metrics';
 	export let data;
 	export let isUpdating;
