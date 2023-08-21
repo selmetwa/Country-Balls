@@ -4,7 +4,7 @@
 	import { rangeMap } from '../constants/rangeMap';
 	import Map from '../components/Map.svelte';
 	import UpdateForm from '../components/UpdateForm.svelte';
-
+  import Footer from '../components/Footer.svelte';
 	export let data;
 
 	$: year = '';
@@ -16,10 +16,8 @@
 
   // timelapse variables
   $: timelapseIndex = 0;
-  $: reversedYears = [];
-  $: isTimelapsing = false;
-  $: endYear = '';
   $: timelapseInterval = null;
+  $: currentTimelapseYear = '';
 
 	const updateMetric = async (e) => {
 		metric = e.target.value;
@@ -67,42 +65,64 @@
     timelapseInterval = setTimeout(() => {
       nextIteration();
     }, 3000);
-    
-    console.log({ timelapseInterval })
   }
 
   function nextIteration() {
-    if (reversedYears[timelapseIndex] !== endYear) {
-      updateMapTimelapse(reversedYears[timelapseIndex]);
+    const curr = years[years.length - (1 + timelapseIndex)]
+    currentTimelapseYear = curr
+
+    if (timelapseIndex !== years.length) {
+      updateMapTimelapse(curr);
       timelapseIndex++;
     } else {
-      isTimelapsing = false;
-      alert('Timelapse complete')
+      timelapseIndex = 0;
+      currentTimelapseYear = ''
     }
   }
 
   function handleTimelapse() {
-    isTimelapsing = true;
-    reversedYears = years.reverse()
-    endYear = reversedYears[reversedYears.length - 1]
+    currentTimelapseYear = years[years.length - 1]
     nextIteration()
   }
 
   function pauseTimelapse() {
     clearTimeout(timelapseInterval)
   }
+
+  function unpauseTimelapse() {
+    nextIteration()
+  }
+
+  function stopTimelapse() {
+    clearTimeout(timelapseInterval)
+    timelapseIndex = 0
+    currentTimelapseYear = ''
+  }
 </script>
 
 <section>
 	<div class="wrapper">
-		<UpdateForm {updateYear} {updateMetric} {years} {handleSubmit} {handleTimelapse} {isTimelapsing} {timelapseIndex} {pauseTimelapse} />
-		<Map data={mapData} {year} {isUpdating} {metric} {geoData} />
+		<UpdateForm 
+      {updateYear} 
+      {updateMetric} 
+      {years} 
+      {handleSubmit} 
+      {handleTimelapse} 
+      {pauseTimelapse} 
+      {currentTimelapseYear}
+      {unpauseTimelapse}
+      {stopTimelapse}
+      {metric}
+    />
+		<Map data={mapData} {year} {isUpdating} {metric} {geoData} {currentTimelapseYear} />
 	</div>
 </section>
+<Footer />
 
 <style>
 	section {
 		position: relative;
+    overflow: hidden;
 	}
 
 	.wrapper {

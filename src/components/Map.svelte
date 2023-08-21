@@ -1,6 +1,6 @@
 <!-- Map.svelte -->
 <script>
-	import { onMount, afterUpdate, tick } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import {
 		select,
 		geoPath,
@@ -12,11 +12,12 @@
 		forceY,
 	} from 'd3';
 	import { countryISOMapping } from '../data/countryISOMapping';
-
+  import { metrics } from '../constants/metrics';
 	export let data;
 	export let isUpdating;
-	export let fileName;
 	export let geoData;
+  export let currentTimelapseYear;
+  export let metric;
 
 	let currentTick = 0;
 	$: isUpdating = false;
@@ -46,8 +47,6 @@
 		const wrapper = document.querySelector('.map-container');
 		const svg = select('.map-container');
 
-		console.log(fileName, { data });
-
 		if (geoData && geoData.features && data && wrapper) {
 			const width = wrapper.clientWidth;
 			const height = wrapper.clientHeight;
@@ -75,6 +74,21 @@
 
 			countryGroups.attr('fill', '#F4F5F6').attr('stroke', '#E9EBED').attr('stroke-width', 1);
 
+      if (width < 1040) {
+        const form = document.querySelector('form')
+        form.style.display = 'none'
+        svg
+          .append("text")
+          .attr("x", 10)
+          .attr("y", 100)
+          .attr("font-size", "20px")
+          .attr("fill", "blue")
+          .attr("font-family", "Arial")
+          .attr("text-anchor", "start")
+          .text("Screen too small for visualizations");
+
+        return
+      }
 			svg
 				.selectAll('image')
 				.data(geoData.features)
@@ -111,12 +125,46 @@
 </script>
 
 {#if geoData}
+  {#if currentTimelapseYear}
+    <div class="timelapse-data">
+      <h1 class="timelapse-year">{currentTimelapseYear}</h1>
+      <h2 class="timelapse-metric">{metrics.filter(m => m.value === metric)[0].name}</h2>
+    </div>
+  {/if}
 	<svg class="map-container" />
 {:else}
 	<p>Loading map data...</p>
 {/if}
 
 <style>
+  .timelapse-data {
+    position: absolute;
+    left: 0; 
+    right: 0; 
+    font-family: sans-serif;
+    top: 0;
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 250px;
+    margin-top: 15px;
+    border: 1px solid red;
+    padding: 8px 4px;
+    background-color: #F4F5F6;
+    border: 2px solid #E9EBED;
+    text-align: center;
+  }
+
+  .timelapse-year {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .timelapse-metric {
+    margin: 4px 0 0 0;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
 	.map-container {
 		height: calc(100vh - 50px);
 		width: calc(100vw - 50px);

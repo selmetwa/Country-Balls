@@ -16,10 +16,6 @@ export const metrics = [
     value: 'gdp_ppp'
   },
   {
-    name: 'Population',
-    value: 'population'
-  },
-  {
     name: 'Population Under 14',
     value: 'population_under_14'
   },

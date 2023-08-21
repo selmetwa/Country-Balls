@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as d3 from 'd3';
 import fs from 'fs';
 import { rangeMap } from '../constants/rangeMap';
@@ -10,9 +11,6 @@ export const generateData = (year, metric) => {
   const res = d3.csvParse(csvData)
 
   for (const obj of res) {
-    // const a = !exclude.includes(obj['Country Code'])
-    // console.log({ a });
-
     if (!exclude.includes(obj['Country Code'])) {
       const country = obj['Country Code'];
       const name = obj['Country Name'];
@@ -26,14 +24,12 @@ export const generateData = (year, metric) => {
   const maxValue = Number(d3.max(rawValues));
   const minValue = Number(d3.min(rawValues)) || 0;
 
-  console.log({ maxValue, minValue });
   const circleSizeScale = d3
     .scaleLinear()
     .domain([minValue, maxValue])
     .rangeRound(rangeMap[metric][year]);
 
   for (const obj of output) {
-    console.log({ obj });
     if (obj && obj.rawValue > 0) {
       const width = circleSizeScale(obj.rawValue);
       obj.width = width;
