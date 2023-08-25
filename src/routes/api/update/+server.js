@@ -11,5 +11,7 @@ export const POST = async ({ request }) => {
   const data = await request.json();
   
   const { year, metric } = data;
-  return json(generateData(year, metric))
+  const responseData = await generateData(year, metric)
+
+  return json(responseData);
 }

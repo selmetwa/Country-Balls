@@ -5,5 +5,5 @@ export const load = async () => {
   const year = '2022';
   const fileName = 'gdp'
 
-  return generateData(year, fileName)
+  return await generateData(year, fileName)
 }

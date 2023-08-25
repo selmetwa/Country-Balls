@@ -1,14 +1,13 @@
-// @ts-ignore
 import * as d3 from 'd3';
-import fs from 'fs';
 import { rangeMap } from '../constants/rangeMap';
 
-export const generateData = (year, metric) => {
+export const generateData = async (year, metric) => {
   const output = [];
   const exclude = ["TEA", "TEC", "PST", "PRE", "OSS", "OED", "MEA", "LTE", "LMY", "LMC", "LDC", "LCN", "LAC", "INX", "IDB", "IDA", "IBT", "IBD", "FCS", "EMU", "ECS", "ECA", "EAS", "CSS", ""]
 
-  const csvData = fs.readFileSync(`src/public/data/${metric}.csv`, 'utf8')
-  const res = d3.csvParse(csvData)
+  const csvData = await fetch(`https://country-bubbles.s3.amazonaws.com/${metric}.csv`)
+  const cleanedCsv = await csvData.text()
+  const res = d3.csvParse(cleanedCsv)
 
   for (const obj of res) {
     if (!exclude.includes(obj['Country Code'])) {

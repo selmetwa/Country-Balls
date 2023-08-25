@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import fs from 'fs';
 
 	import { rangeMap } from '../constants/rangeMap';
 	import Map from '../components/Map.svelte';
@@ -13,7 +12,6 @@
 	$: years = [];
 	$: metric = '';
 	$: mapData = [];
-	// $: geoData = [];
 	$: isUpdating = false;
 
 	// timelapse variables
