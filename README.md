@@ -1,38 +1,22 @@
-# create-svelte
+## Compare countries on 14 metrics over the past 60 years
+<img width="1200" alt="Screen Shot 2023-08-26 at 7 13 38 PM" src="https://github.com/selmetwa/Country-Bubbles/assets/46908343/38dc850f-bfea-4964-962a-ece75c47132b">
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+---
 
-## Creating a project
+### Metrics
+1. GDP
+2. GDP Per Capita
+3. GDP Growth
+4. GDP Purchasing Power Parity
+5. Population Under 14
+6. Population Above 65
+7. Military Spending as a Percentage of GDP
+8. Central Government Debt as a Percentage of GDP
+9. Passengers carried by rail
+10. Passengers carried by air
+11. Total Reserves Including Gold
+12. Patent Applications
+13. IMF Debt
+14. Exports
+15. Imports
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
